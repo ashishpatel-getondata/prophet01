@@ -59,7 +59,7 @@ def main():
     forecast = model.predict(future)
 
     st.write('Forecast Data')
-    st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
+    st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
 
     st.subheader('Forecast Plot')
     fig1 = plot_plotly(model, forecast)
