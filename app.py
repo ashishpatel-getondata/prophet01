@@ -22,7 +22,7 @@ def main():
 
     with st.form(key='column_selection'):
         date_column = st.selectbox("Select the Date Column", df.columns)
-        value_column = st.selectbox("Select the Value/Output Column", df.columns)
+        value_column = st.selectbox("Select the Metric to Forecast", df.columns)
         submit_columns = st.form_submit_button("Submit")
 
     if not submit_columns:
