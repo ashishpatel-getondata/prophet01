@@ -6,38 +6,76 @@ import pandas as pd
 from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 
+def load_default_data():
+    """Load default Prophet example data."""
+    url = 'https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv'
+    return pd.read_csv(url)
+
 def main():
-    # Set Streamlit app title and description
-    st.title('Time Series Forecasting App')
+    st.set_page_config(page_title='Time Series Forecasting App', layout='centered')
+    st.title('Time Series Forecasting App using Prophet')
 
-    # Load prophet example data into a pandas dataframe
-    df = pd.read_csv('https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv')
+    st.sidebar.header('Configuration')
 
-    # Display the input data
-    st.write('Input Data')
-    st.dataframe(df)
-    
-    # Create and fit the Prophet model
-    m = Prophet()
-    m.fit(df)
+    data_source = st.sidebar.radio("Choose data source:", ['Default dataset', 'Upload your own CSV'])
+    periods_input = st.sidebar.number_input('Days to forecast into the future:', min_value=1, max_value=730, value=365)
 
-    # Make future predictions
-    future = m.make_future_dataframe(periods=365)
-    forecast = m.predict(future)
+    if data_source == 'Upload your own CSV':
+        uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
 
-    # Display the forecast data
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+
+            st.write("File uploaded successfully. Please select the required columns.")
+
+            # Let the user pick date and value columns
+            with st.form(key='column_selection'):
+                date_column = st.selectbox("Select the Date Column", df.columns)
+                value_column = st.selectbox("Select the Value/Output Column", df.columns)
+                submit_columns = st.form_submit_button("Submit")
+
+            if submit_columns:
+                try:
+                    df = df[[date_column, value_column]].copy()
+                    df = df.rename(columns={date_column: 'ds', value_column: 'y'})
+                    df['ds'] = pd.to_datetime(df['ds'])
+                    df['y'] = pd.to_numeric(df['y'], errors='coerce')
+                    df.dropna(subset=['ds', 'y'], inplace=True)
+                except Exception as e:
+                    st.error(f"Error processing selected columns: {e}")
+                    return
+            else:
+                st.stop()
+        else:
+            st.warning("Please upload a CSV file.")
+            return
+    else:
+        df = load_default_data()
+        df['ds'] = pd.to_datetime(df['ds'])
+        df['y'] = pd.to_numeric(df['y'], errors='coerce')
+        df.dropna(subset=['ds', 'y'], inplace=True)
+
+    if st.checkbox('Show input data'):
+        st.subheader('Input Data Preview')
+        st.dataframe(df)
+
+    st.subheader('Forecast Results')
+    model = Prophet()
+    model.fit(df)
+
+    future = model.make_future_dataframe(periods=periods_input)
+    forecast = model.predict(future)
+
     st.write('Forecast Data')
-    st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
+    st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail())
 
-    # Display the forecast plot
-    st.write('Forecast Plot')
-    fig_forecast = plot_plotly(m, forecast)
-    st.plotly_chart(fig_forecast)
+    st.subheader('Forecast Plot')
+    fig1 = plot_plotly(model, forecast)
+    st.plotly_chart(fig1)
 
-    # Display the forecast components
-    st.write('Forecast Components')
-    fig_components = plot_components_plotly(m, forecast)
-    st.plotly_chart(fig_components)
+    st.subheader('Forecast Components')
+    fig2 = plot_components_plotly(model, forecast)
+    st.plotly_chart(fig2)
 
 if __name__ == '__main__':
     main()
