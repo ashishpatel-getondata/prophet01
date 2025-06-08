@@ -24,7 +24,7 @@ def main():
     st.dataframe(forecast)
 
     # Display forecast plot
-    fig_forecast = st.plotly_chart(plot_plotly(m, forecast))
+    fig_forecast = plot_plotly(m, forecast)
     st.plotly_chart(fig_forecast)
 
 if __name__ == '__main__':
