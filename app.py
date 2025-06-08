@@ -16,20 +16,21 @@ def main():
         st.warning("Please upload a CSV file to proceed.")
         st.stop()
 
-    # Load uploaded CSV
     df = pd.read_csv(uploaded_file)
-    st.write("File uploaded successfully. Please select the required columns.")
+    st.write("File uploaded successfully. Please fill the form below to configure the forecast.")
 
-    # Step 1: Select columns and submit
-    with st.form(key='select_columns'):
+    with st.form(key='config_form'):
         date_column = st.selectbox("Select the Date Column", df.columns)
         value_column = st.selectbox("Select the Metric to Forecast", df.columns)
-        submitted_columns = st.form_submit_button("Submit Columns")
+        periods_input = st.number_input(
+            'Days to forecast into the future:',
+            min_value=1, max_value=730, value=365
+        )
+        submitted = st.form_submit_button("Run Forecast")
 
-    if not submitted_columns:
+    if not submitted:
         st.stop()
 
-    # Prepare dataframe and show input data
     try:
         df_subset = df[[date_column, value_column]].copy()
         df_subset = df_subset.rename(columns={date_column: 'ds', value_column: 'y'})
@@ -43,18 +44,6 @@ def main():
     st.subheader('Input Data')
     st.dataframe(df_subset)
 
-    # Step 2: Ask for forecast days and submit
-    with st.form(key='forecast_config'):
-        periods_input = st.number_input(
-            'Days to forecast into the future:',
-            min_value=1, max_value=730, value=365
-        )
-        submitted_forecast = st.form_submit_button("Run Forecast")
-
-    if not submitted_forecast:
-        st.stop()
-
-    # Fit and forecast
     st.subheader('Forecast Results')
     model = Prophet()
     model.fit(df_subset)
@@ -74,3 +63,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
