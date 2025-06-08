@@ -11,6 +11,10 @@ def main():
     # Load prophet example data into a pandas dataframe
     df = pd.read_csv('https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv')
 
+    # Display the input data
+    st.write('Input Data')
+    st.dataframe(df)
+    
     # Create and fit the Prophet model
     m = Prophet()
     m.fit(df)
