@@ -1,5 +1,5 @@
-pandas
-streamlit
+pandas==2.2.3
+streamlit==1.42.0
 prophet
-yfinance
-plotly
+yfinance==0.2.40
+plotly==6.0.0
