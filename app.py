@@ -25,7 +25,7 @@ def main():
 
     # Display the forecast data
     st.write('Forecast Data')
-    st.dataframe(forecast)
+    st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
 
     # Display the forecast plot
     st.write('Forecast Plot')
