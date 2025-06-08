@@ -18,6 +18,9 @@ def forecast(df):
     future = m.make_future_dataframe(periods=365)
     forecast = m.predict(future)
 
+    # Forecast plot
+    plot_plotly(m, forecast)
+
     #Return the forecast DataFrame
     return forecast
 
@@ -32,8 +35,7 @@ def main():
   # Display the forecast output
   st.dataframe(forecast_data)
 
-  # Forecast plot
-  plot_plotly(m, forecast)
+ 
 
   
 if __name__ == '__main__':
