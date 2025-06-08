@@ -1,4 +1,6 @@
-# https://davidmarquis.hashnode.dev/create-a-basic-forecasting-app-using-streamlit-and-prophet
+# Reference 1: https://davidmarquis.hashnode.dev/create-a-basic-forecasting-app-using-streamlit-and-prophet
+# Reference 2: https://facebook.github.io/prophet/docs/quick_start.html#python-api
+
 import streamlit as st
 import pandas as pd
 from prophet import Prophet
