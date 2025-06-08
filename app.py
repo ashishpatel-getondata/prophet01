@@ -16,38 +16,31 @@ def main():
     st.title('Time Series Forecasting App using Prophet')
 
     st.sidebar.header('Configuration')
-
-    data_source = st.sidebar.radio("Choose data source:", ['Default dataset', 'Upload your own CSV'])
     periods_input = st.sidebar.number_input('Days to forecast into the future:', min_value=1, max_value=730, value=365)
 
-    if data_source == 'Upload your own CSV':
-        uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
+    uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
 
-        if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
 
-            st.write("File uploaded successfully. Please select the required columns.")
+        st.write("File uploaded successfully. Please select the required columns.")
 
-            # Let the user pick date and value columns
-            with st.form(key='column_selection'):
-                date_column = st.selectbox("Select the Date Column", df.columns)
-                value_column = st.selectbox("Select the Value/Output Column", df.columns)
-                submit_columns = st.form_submit_button("Submit")
+        with st.form(key='column_selection'):
+            date_column = st.selectbox("Select the Date Column", df.columns)
+            value_column = st.selectbox("Select the Value/Output Column", df.columns)
+            submit_columns = st.form_submit_button("Submit")
 
-            if submit_columns:
-                try:
-                    df = df[[date_column, value_column]].copy()
-                    df = df.rename(columns={date_column: 'ds', value_column: 'y'})
-                    df['ds'] = pd.to_datetime(df['ds'])
-                    df['y'] = pd.to_numeric(df['y'], errors='coerce')
-                    df.dropna(subset=['ds', 'y'], inplace=True)
-                except Exception as e:
-                    st.error(f"Error processing selected columns: {e}")
-                    return
-            else:
-                st.stop()
-        else:
-            st.warning("Please upload a CSV file.")
+        if not submit_columns:
+            st.stop()
+
+        try:
+            df = df[[date_column, value_column]].copy()
+            df = df.rename(columns={date_column: 'ds', value_column: 'y'})
+            df['ds'] = pd.to_datetime(df['ds'])
+            df['y'] = pd.to_numeric(df['y'], errors='coerce')
+            df.dropna(subset=['ds', 'y'], inplace=True)
+        except Exception as e:
+            st.error(f"Error processing selected columns: {e}")
             return
     else:
         df = load_default_data()
@@ -55,9 +48,8 @@ def main():
         df['y'] = pd.to_numeric(df['y'], errors='coerce')
         df.dropna(subset=['ds', 'y'], inplace=True)
 
-    if st.checkbox('Show input data'):
-        st.subheader('Input Data Preview')
-        st.dataframe(df)
+    st.subheader('Input Data')
+    st.dataframe(df)
 
     st.subheader('Forecast Results')
     model = Prophet()
@@ -79,3 +71,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
