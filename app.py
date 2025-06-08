@@ -7,7 +7,6 @@ from prophet.plot import plot_plotly
 def main():
     # Set Streamlit app title and description
     st.title('Time Series Forecasting App')
-    st.write('My Forecast Data.')
 
     # Load prophet example data into a pandas dataframe
     df = pd.read_csv('https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv')
@@ -21,9 +20,11 @@ def main():
     forecast = m.predict(future)
 
     # Display the forecast output
+    st.write('Forecasted Data')
     st.dataframe(forecast)
 
     # Display forecast plot
+    st.write('Forecasting Plot')
     fig_forecast = plot_plotly(m, forecast)
     st.plotly_chart(fig_forecast)
 
