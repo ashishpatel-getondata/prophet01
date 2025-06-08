@@ -10,19 +10,13 @@ def main():
     st.set_page_config(page_title='Time Series Forecasting App', layout='centered')
     st.title('Time Series Forecasting App using Prophet')
 
-    st.sidebar.header('Configuration')
-    periods_input = st.sidebar.number_input(
-        'Days to forecast into the future:',
-        min_value=1, max_value=730, value=365
-    )
-
     uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
 
     if uploaded_file is None:
         st.warning("Please upload a CSV file to proceed.")
         st.stop()
 
-    # Read uploaded file
+    # Load uploaded CSV
     df = pd.read_csv(uploaded_file)
     st.write("File uploaded successfully. Please select the required columns.")
 
@@ -48,6 +42,13 @@ def main():
     st.subheader('Input Data')
     st.dataframe(df)
 
+    # Now show forecasting configuration
+    st.sidebar.header('Forecast Configuration')
+    periods_input = st.sidebar.number_input(
+        'Days to forecast into the future:',
+        min_value=1, max_value=730, value=365
+    )
+
     # Fit and forecast
     st.subheader('Forecast Results')
     model = Prophet()
@@ -56,7 +57,6 @@ def main():
     future = model.make_future_dataframe(periods=periods_input)
     forecast = model.predict(future)
 
-    st.write('Forecast Data')
     st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
 
     st.subheader('Forecast Plot')
