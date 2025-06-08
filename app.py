@@ -19,14 +19,19 @@ def main():
     future = m.make_future_dataframe(periods=365)
     forecast = m.predict(future)
 
-    # Display the forecast output
-    st.write('Forecasted Data')
+    # Display the forecast data
+    st.write('Forecast Data')
     st.dataframe(forecast)
 
-    # Display forecast plot
-    st.write('Forecasting Plot')
+    # Display the forecast plot
+    st.write('Forecast Plot')
     fig_forecast = plot_plotly(m, forecast)
     st.plotly_chart(fig_forecast)
+
+    # Display the forecast components
+    st.write('Forecast Components')
+    fig_components = plot_components_plotly(m, forecast)
+    st.plotly_chart(fig_components)
 
 if __name__ == '__main__':
     main()
