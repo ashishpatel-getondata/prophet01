@@ -6,51 +6,49 @@ import pandas as pd
 from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 
-def load_default_data():
-    """Load default Prophet example data."""
-    url = 'https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv'
-    return pd.read_csv(url)
-
 def main():
     st.set_page_config(page_title='Time Series Forecasting App', layout='centered')
     st.title('Time Series Forecasting App using Prophet')
 
     st.sidebar.header('Configuration')
-    periods_input = st.sidebar.number_input('Days to forecast into the future:', min_value=1, max_value=730, value=365)
+    periods_input = st.sidebar.number_input(
+        'Days to forecast into the future:',
+        min_value=1, max_value=730, value=365
+    )
 
     uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
 
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
+    if uploaded_file is None:
+        st.warning("Please upload a CSV file to proceed.")
+        st.stop()
 
-        st.write("File uploaded successfully. Please select the required columns.")
+    # Read uploaded file
+    df = pd.read_csv(uploaded_file)
+    st.write("File uploaded successfully. Please select the required columns.")
 
-        with st.form(key='column_selection'):
-            date_column = st.selectbox("Select the Date Column", df.columns)
-            value_column = st.selectbox("Select the Value/Output Column", df.columns)
-            submit_columns = st.form_submit_button("Submit")
+    with st.form(key='column_selection'):
+        date_column = st.selectbox("Select the Date Column", df.columns)
+        value_column = st.selectbox("Select the Value/Output Column", df.columns)
+        submit_columns = st.form_submit_button("Submit")
 
-        if not submit_columns:
-            st.stop()
+    if not submit_columns:
+        st.stop()
 
-        try:
-            df = df[[date_column, value_column]].copy()
-            df = df.rename(columns={date_column: 'ds', value_column: 'y'})
-            df['ds'] = pd.to_datetime(df['ds'])
-            df['y'] = pd.to_numeric(df['y'], errors='coerce')
-            df.dropna(subset=['ds', 'y'], inplace=True)
-        except Exception as e:
-            st.error(f"Error processing selected columns: {e}")
-            return
-    else:
-        df = load_default_data()
+    # Prepare dataframe
+    try:
+        df = df[[date_column, value_column]].copy()
+        df = df.rename(columns={date_column: 'ds', value_column: 'y'})
         df['ds'] = pd.to_datetime(df['ds'])
         df['y'] = pd.to_numeric(df['y'], errors='coerce')
         df.dropna(subset=['ds', 'y'], inplace=True)
+    except Exception as e:
+        st.error(f"Error processing selected columns: {e}")
+        return
 
     st.subheader('Input Data')
     st.dataframe(df)
 
+    # Fit and forecast
     st.subheader('Forecast Results')
     model = Prophet()
     model.fit(df)
@@ -71,4 +69,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
