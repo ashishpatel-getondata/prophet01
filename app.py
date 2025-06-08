@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 from prophet import Prophet
-from prophet.plot import plot_plotly
+from prophet.plot import plot_plotly, plot_components_plotly
 
 def main():
     # Set Streamlit app title and description
