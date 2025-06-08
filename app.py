@@ -20,39 +20,44 @@ def main():
     df = pd.read_csv(uploaded_file)
     st.write("File uploaded successfully. Please select the required columns.")
 
-    with st.form(key='column_selection'):
+    # Step 1: Select columns and submit
+    with st.form(key='select_columns'):
         date_column = st.selectbox("Select the Date Column", df.columns)
         value_column = st.selectbox("Select the Metric to Forecast", df.columns)
-        submit_columns = st.form_submit_button("Submit")
+        submitted_columns = st.form_submit_button("Submit Columns")
 
-    if not submit_columns:
+    if not submitted_columns:
         st.stop()
 
-    # Prepare dataframe
+    # Prepare dataframe and show input data
     try:
-        df = df[[date_column, value_column]].copy()
-        df = df.rename(columns={date_column: 'ds', value_column: 'y'})
-        df['ds'] = pd.to_datetime(df['ds'])
-        df['y'] = pd.to_numeric(df['y'], errors='coerce')
-        df.dropna(subset=['ds', 'y'], inplace=True)
+        df_subset = df[[date_column, value_column]].copy()
+        df_subset = df_subset.rename(columns={date_column: 'ds', value_column: 'y'})
+        df_subset['ds'] = pd.to_datetime(df_subset['ds'])
+        df_subset['y'] = pd.to_numeric(df_subset['y'], errors='coerce')
+        df_subset.dropna(subset=['ds', 'y'], inplace=True)
     except Exception as e:
         st.error(f"Error processing selected columns: {e}")
-        return
+        st.stop()
 
     st.subheader('Input Data')
-    st.dataframe(df)
+    st.dataframe(df_subset)
 
-    # Now show forecasting configuration
-    st.sidebar.header('Forecast Configuration')
-    periods_input = st.sidebar.number_input(
-        'Days to forecast into the future:',
-        min_value=1, max_value=730, value=365
-    )
+    # Step 2: Ask for forecast days and submit
+    with st.form(key='forecast_config'):
+        periods_input = st.number_input(
+            'Days to forecast into the future:',
+            min_value=1, max_value=730, value=365
+        )
+        submitted_forecast = st.form_submit_button("Run Forecast")
+
+    if not submitted_forecast:
+        st.stop()
 
     # Fit and forecast
     st.subheader('Forecast Results')
     model = Prophet()
-    model.fit(df)
+    model.fit(df_subset)
 
     future = model.make_future_dataframe(periods=periods_input)
     forecast = model.predict(future)
