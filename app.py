@@ -8,7 +8,7 @@ from prophet.plot import plot_plotly, plot_components_plotly
 
 def main():
     st.set_page_config(page_title='Time Series Forecasting App', layout='centered')
-    st.title('Time Series Forecasting App using Prophet')
+    st.title('Time Series Forecasting App')
 
     uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
 
@@ -23,7 +23,7 @@ def main():
         date_column = st.selectbox("Select the Date Column", df.columns)
         value_column = st.selectbox("Select the Metric to Forecast", df.columns)
         periods_input = st.number_input(
-            'Days to forecast into the future:',
+            'Days to Forecast into the Future:',
             min_value=1, max_value=730, value=365
         )
         submitted = st.form_submit_button("Run Forecast")
