@@ -34,17 +34,16 @@ def main():
     with st.form(key='config_form'):
         date_column = st.selectbox("Select the Date or TimeStamp Column", df.columns)
         value_column = st.selectbox("Select the Metric to Forecast", df.columns)
-		
 	freq_options = {
-	    'D: calendar day': 'D',
-	    'W: weekly': 'W',
-	    'h: hourly': 'h',
-	    'min: minutely': 'min',
-	    's: secondly': 's',
-	    'MS: month start frequency': 'MS',
-	    'ME: month end frequency': 'ME',
-	    'YS: year start frequency': 'YS',
-	    'YE: year end frequency': 'YE'
+		'D: calendar day': 'D',
+		'W: weekly': 'W',
+		'h: hourly': 'h',
+		'min: minutely': 'min',
+		's: secondly': 's',
+		'MS: month start frequency': 'MS',
+		'ME: month end frequency': 'ME',
+		'YS: year start frequency': 'YS',
+		'YE: year end frequency': 'YE'
 	}
 	freq_label = st.selectbox("Select the frequency", list(freq_options.keys()))
 	freq_input = freq_options[freq_label]	
