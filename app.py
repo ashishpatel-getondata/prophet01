@@ -42,7 +42,7 @@ def main():
         st.stop()
 
     st.subheader('Input Data')
-    st.dataframe(df_subset)
+    st.dataframe(df_subset.sort_values(by='ds'))
 
     st.subheader('Forecast Results')
     model = Prophet()
