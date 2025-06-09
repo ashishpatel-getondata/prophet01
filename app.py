@@ -30,7 +30,7 @@ def main():
 
     df = pd.read_csv(uploaded_file)
     st.write("File uploaded successfully. Please fill the form below to configure the forecast.")
-
+	
     with st.form(key='config_form'):
         date_column = st.selectbox("Select the Date or TimeStamp Column", df.columns)
         value_column = st.selectbox("Select the Metric to Forecast", df.columns)
