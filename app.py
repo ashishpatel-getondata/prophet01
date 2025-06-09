@@ -36,16 +36,16 @@ def main():
         value_column = st.selectbox("Select the Metric to Forecast", df.columns)
 		
 	freq_options = {
-		'D: calendar day': 'D',
-		'W: weekly': 'W',
-		'h: hourly': 'h',
-		'min: minutely': 'min',
-		's: secondly': 's',
-		'MS: month start frequency': 'MS',
-		'ME: month end frequency': 'ME',
-		'YS: year start frequency': 'YS',
-		'YE: year end frequency': 'YE'
-		}
+	    'D: calendar day': 'D',
+	    'W: weekly': 'W',
+	    'h: hourly': 'h',
+	    'min: minutely': 'min',
+	    's: secondly': 's',
+	    'MS: month start frequency': 'MS',
+	    'ME: month end frequency': 'ME',
+	    'YS: year start frequency': 'YS',
+	    'YE: year end frequency': 'YE'
+	}
 	freq_label = st.selectbox("Select the frequency", list(freq_options.keys()))
 	freq_input = freq_options[freq_label]	
         periods_input = st.number_input('Period to Forecast into the Future:', min_value=1, max_value=730, value=365)
