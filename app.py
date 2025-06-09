@@ -10,6 +10,18 @@ def main():
     st.set_page_config(page_title='Time Series Forecasting App', layout='centered')
     st.title('Time Series Forecasting App')
 
+    st.markdown("""
+    Welcome to the Time Series Forecasting App.
+    
+    This app helps you create forecasts based on your historical data using the **Prophet** model.
+    
+    To get started:
+    - Upload a CSV file with your data.
+    - Select the date column and the value you want to forecast.
+    - Choose how many days into the future you’d like to predict.
+    
+    The app will generate a forecast and display charts to help you visualize future trends and patterns.
+    """)
     uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=['csv'])
 
     if uploaded_file is None:
