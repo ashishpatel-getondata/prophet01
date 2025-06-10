@@ -7,11 +7,11 @@ from prophet import Prophet
 from prophet.plot import plot_plotly, plot_components_plotly
 
 def main():
-    st.set_page_config(page_title='Time Series Forecasting App', layout='centered')
-    st.title('Time Series Forecasting App')
+    st.set_page_config(page_title = 'Forecasting Prophet', layout='centered')
+    st.title('Forecasting Prophet')
 
     st.markdown("""
-    Welcome to the Time Series Forecasting App.
+    Welcome to the Forecasting Prophet.
     
     This app helps you create forecasts based on your historical data using the **Prophet** model.
     
