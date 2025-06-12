@@ -18,7 +18,7 @@ def main():
     To get started:
     - Upload a CSV file with your data.
     - Select the date column and the value you want to forecast.
-    - Choose how many days into the future you’d like to predict.
+    - Choose the period into the future you’d like to predict.
     
     The app will generate a forecast and display charts to help you visualize future trends and patterns.
     """)
