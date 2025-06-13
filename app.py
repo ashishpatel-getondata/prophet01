@@ -76,7 +76,7 @@ def main():
     st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']])
 
     st.subheader('Forecast Plot')
-    fig1 = plot_plotly(model, forecast)
+    fig1 = plot_plotly(model, forecast, include_legend = True)
     st.plotly_chart(fig1)
 
     st.subheader('Forecast Components')
